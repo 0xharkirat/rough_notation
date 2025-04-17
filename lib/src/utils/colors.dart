@@ -1,0 +1,9 @@
+import 'dart:ui';
+
+const kHighLightColor = Color(0xFFFFF176);
+
+const kUnderlineColor = Color(0xFFB71C1C);
+
+const kStrikeThroughColor = Color(0xFF1B5E20);
+
+const kCrossedOffColor = Color(0xFFF57F17);
