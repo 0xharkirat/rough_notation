@@ -2,106 +2,45 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rough_notation/rough_notation.dart';
-import 'package:rough_notation/src/controllers/rough_annotation_registry.dart';
+import 'package:rough_notation/src/annotations/rough_annotation.dart';
 import 'package:rough_notation/src/utils/colors.dart';
 import '../painters/line_painter.dart';
 
-class RoughBoxAnnotation extends StatefulWidget {
+class RoughBoxAnnotation extends RoughAnnotation {
   const RoughBoxAnnotation({
     super.key,
-    required this.child,
-    this.color = kBoxColor,
-    this.strokeWidth = 2.0,
-    this.duration = const Duration(milliseconds: 1200),
-    this.delay = Duration.zero,
-    this.padding = 4.0,
+    required super.child,
+    super.color = kBoxColor,
+    super.strokeWidth = 2.0,
+    super.duration = const Duration(milliseconds: 1200),
+    super.delay = Duration.zero,
+    super.padding = 4.0,
     this.looseCorners = true,
-    this.group,
-    this.sequence,
-    this.controller,
+    super.group,
+    super.sequence,
+    super.controller,
   });
 
-  final Widget child;
-  final Color color;
-  final double strokeWidth;
-  final Duration duration;
-  final Duration delay;
-  final double padding;
+ 
   final bool looseCorners;
-  final String? group;
-  final int? sequence;
-  final RoughAnnotationController? controller;
-
-  @override
-  State<RoughBoxAnnotation> createState() => _RoughBoxAnnotationState();
-}
-
-class _RoughBoxAnnotationState extends State<RoughBoxAnnotation>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final Animation<double> _animation;
-  late final int _seed;
-  final GlobalKey _childKey = GlobalKey();
-
-  @override
-  void initState() {
-    super.initState();
-    _seed = DateTime.now().microsecondsSinceEpoch;
-    _controller = AnimationController(vsync: this, duration: widget.duration);
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-
-    if (widget.group != null) {
-      RoughAnnotationRegistry.register(
-        widget.group!,
-        widget.sequence ?? 0,
-        _startAnimation,
-        _reset,
-      );
-    } else if (widget.controller != null) {
-      widget.controller!.bind(
-        start: () => _startAnimation(),
-        reset: () => _reset(),
-      );
-    } else {
-      // No group, no controller — fallback autoplay
-      Future.delayed(widget.delay, () => _controller.forward());
-    }
-  }
-
-  Future<void> _startAnimation() async {
-    if (mounted) await _controller.forward(from: 0);
-  }
-
-  void _reset() {
-    _controller.value = 0;
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+ 
   Offset _jittered(Offset original, Random rand) {
-    if (!widget.looseCorners) return original;
+    if (!looseCorners) return original;
     return original.translate(
       rand.nextDouble() * 6 - 3,
       rand.nextDouble() * 6 - 3,
     );
   }
-
+  
   @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (_, __) {
-        final renderBox =
-            _childKey.currentContext?.findRenderObject() as RenderBox?;
+  Widget buildWithAnimation(BuildContext context, Animation<double> animation, GlobalKey<State<StatefulWidget>> childKey, int seed) {
+   final renderBox =
+            childKey.currentContext?.findRenderObject() as RenderBox?;
         final size = renderBox?.size ?? Size.zero;
-        final width = size.width + (widget.padding);
-        final height = size.height + (widget.padding);
+        final width = size.width + (padding ?? 0);
+        final height = size.height + (padding ?? 0);
 
-        final rand = Random(_seed);
+        final rand = Random(seed);
 
         final lines = [
           // Round 1
@@ -159,17 +98,18 @@ class _RoughBoxAnnotationState extends State<RoughBoxAnnotation>
         return CustomPaint(
           foregroundPainter: LinePainter(
             lines: lines,
-            color: widget.color,
-            strokeWidth: widget.strokeWidth,
-            progress: _animation.value,
-            seed: _seed,
+            color: color,
+            strokeWidth: strokeWidth,
+            progress: animation.value,
+            seed: seed,
           ),
           child: Padding(
-            padding: EdgeInsets.all(widget.padding),
-            child: KeyedSubtree(key: _childKey, child: widget.child),
+            padding: EdgeInsets.all(padding ?? 0.0),
+            child: KeyedSubtree(key: childKey, child: child),
           ),
         );
-      },
-    );
+    
   }
+
+  
 }

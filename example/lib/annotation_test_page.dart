@@ -12,7 +12,7 @@ class AnnotationTestPage extends StatefulWidget {
 class _AnnotationTestPageState extends State<AnnotationTestPage> {
   final _underlineController = RoughAnnotationController(
     autoPlay: true,
-    delay: const Duration(seconds: 2),
+    
   );
 
   @override
@@ -22,7 +22,7 @@ class _AnnotationTestPageState extends State<AnnotationTestPage> {
     // Auto-start the 'demo' group
     RoughAnnotationRegistry.markGroupForAutoStart(
       'demo',
-      delayBetween: const Duration(microseconds: 500),
+   
     );
   }
 
