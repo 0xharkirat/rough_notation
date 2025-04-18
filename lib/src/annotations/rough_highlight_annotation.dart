@@ -12,7 +12,7 @@ class RoughHighlightAnnotation extends StatefulWidget {
     super.key,
     required this.child,
     this.color = kHighLightColor,
-    this.strokeWidth = 12,
+    
     this.padding,
     this.duration = const Duration(milliseconds: 800),
     this.delay = Duration.zero,
@@ -23,7 +23,7 @@ class RoughHighlightAnnotation extends StatefulWidget {
 
   final Widget child;
   final Color color;
-  final double strokeWidth;
+ 
   final double? padding;
   final Duration duration;
   final Duration delay;
@@ -98,7 +98,7 @@ class _RoughHighlightAnnotationState extends State<RoughHighlightAnnotation>
           SketchLine(start: from, end: to, fromProgress: 0.0, toProgress: 0.5),
           SketchLine(
             start: to,
-            end: from.translate(10, Random(_seed).nextDouble() * 20 - 10),
+            end: from.translate(10, Random(_seed).nextDouble() * 25 - 12.5),
             fromProgress: 0.5,
             toProgress: 1.0,
           ),
@@ -106,7 +106,7 @@ class _RoughHighlightAnnotationState extends State<RoughHighlightAnnotation>
 
         return CustomPaint(
           painter: LinePainter(
-            strokeCap: StrokeCap.square,
+            strokeCap: StrokeCap.butt,
             lines: lines,
             color: widget.color,
             progress: _animation.value,

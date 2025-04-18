@@ -34,6 +34,16 @@ class _AnnotationTestPageState extends State<AnnotationTestPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            RoughBracketAnnotation(
+              brackets: ['left', 'right'], // or ['top'], ['bottom'], etc.
+              child: Text(
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+                'Sed accumsan nisi hendrerit augue molestie tempus...',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+
+            const SizedBox(height: 20),
             RoughUnderlineAnnotation(
               controller: _underlineController,
               delay: const Duration(seconds: 2),
@@ -98,7 +108,6 @@ class _AnnotationTestPageState extends State<AnnotationTestPage> {
 
             const SizedBox(height: 20),
             RoughHighlightAnnotation(
-              
               child: const Text(
                 "Highlight me!",
                 style: TextStyle(fontSize: 24),
