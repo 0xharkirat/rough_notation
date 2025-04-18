@@ -24,7 +24,6 @@ class _AnnotationTestPageState extends State<AnnotationTestPage> {
       'demo',
       delayBetween: const Duration(microseconds: 500),
     );
-    
   }
 
   @override
@@ -84,7 +83,6 @@ class _AnnotationTestPageState extends State<AnnotationTestPage> {
             ),
             const SizedBox(height: 24),
             RoughCrossedOffAnnotation(
-
               group: 'demo',
               sequence: 4,
               child: const Text(
@@ -95,12 +93,17 @@ class _AnnotationTestPageState extends State<AnnotationTestPage> {
             const SizedBox(height: 40),
 
             RoughCircleAnnotation(
-  child: Text(
-    "Look at me!",
-    style: TextStyle(fontSize: 24),
-  ),
-)
+              child: Text("Look at me!", style: TextStyle(fontSize: 24)),
+            ),
 
+            const SizedBox(height: 20),
+            RoughHighlightAnnotation(
+              
+              child: const Text(
+                "Highlight me!",
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
 
             // SubTestWidget(),
           ],

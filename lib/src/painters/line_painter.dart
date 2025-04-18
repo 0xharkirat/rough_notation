@@ -24,6 +24,7 @@ class LinePainter extends CustomPainter {
   final double progress;
   final double strokeWidth;
   final int seed;
+  final StrokeCap strokeCap;
 
   LinePainter({
     required this.color,
@@ -31,6 +32,8 @@ class LinePainter extends CustomPainter {
     this.strokeWidth = 2.0,
     this.seed = 0,
     required this.lines,
+    this.strokeCap = StrokeCap.round,
+
   });
 
   @override
@@ -40,7 +43,7 @@ class LinePainter extends CustomPainter {
           ..color = color
           ..style = PaintingStyle.stroke
           ..strokeWidth = strokeWidth
-          ..strokeCap = StrokeCap.round;
+          ..strokeCap = strokeCap;
 
 
     for (int i = 0; i < lines.length; i++) {
