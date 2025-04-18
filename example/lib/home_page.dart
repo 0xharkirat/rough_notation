@@ -15,42 +15,30 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            RoughNotation(
-              child: const Text(
-                'Highlighted Text',
-                style: TextStyle(fontSize: 24),
-              ),
+            RoughUnderlineAnnotation(
+              strokeWidth: 2.5,
+            
+              child: Text("Underline me!", style: TextStyle(fontSize: 24)),
+            ),
+            const SizedBox(height: 20),
+            RoughStrikethroughAnnotation(
+              strokeWidth: 2.5,
+              duration: Duration(milliseconds: 2000),
+              child: Text('Strike me out!', style: TextStyle(fontSize: 24)),
+            ),
+            const SizedBox(height: 20),
+            RoughCrossedOffAnnotation(
+              strokeWidth: 2.5,
+              duration: const Duration(milliseconds: 2000),
+
+              child: Text('Cross me off!', style: TextStyle(fontSize: 24)),
             ),
 
             const SizedBox(height: 20),
-
-            RoughNotation(
-              duration: const Duration(milliseconds: 1000),
-              type: RoughNotationType.underline,
-              child: const Text(
-                'Underlined Text',
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-            RoughNotation(
-              duration: const Duration(milliseconds: 1000),
-              type: RoughNotationType.strikeThrough,
-              child: const Text(
-                'Strikethrough Text',
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-            RoughNotation(
-              duration: const Duration(milliseconds: 1000),
-              type: RoughNotationType.crossedOff,
-              child: const Text(
-                'Crossed Off Text',
-                style: TextStyle(fontSize: 24),
-              ),
+            RoughBoxAnnotation(
+              strokeWidth: 2.5,
+              duration: const Duration(milliseconds: 2000),
+              child: const Text('Boxed Annotation!', style: TextStyle(fontSize: 24)),
             ),
           ],
         ),
