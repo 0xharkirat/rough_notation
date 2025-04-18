@@ -15,12 +15,10 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-
-            
             const SizedBox(height: 20),
             RoughUnderlineAnnotation(
               strokeWidth: 2.5,
-            
+
               child: Text("Underline me!", style: TextStyle(fontSize: 24)),
             ),
             const SizedBox(height: 20),
@@ -41,11 +39,13 @@ class HomePage extends StatelessWidget {
             RoughBoxAnnotation(
               strokeWidth: 2.5,
               duration: const Duration(milliseconds: 2000),
-              child: const Text('Boxed Annotation!', style: TextStyle(fontSize: 24)),
+              child: const Text(
+                'Boxed Annotation!',
+                style: TextStyle(fontSize: 24),
+              ),
             ),
 
             const SizedBox(height: 20),
-            
           ],
         ),
       ),

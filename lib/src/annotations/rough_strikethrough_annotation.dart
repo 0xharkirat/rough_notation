@@ -26,8 +26,7 @@ class RoughStrikethroughAnnotation extends RoughAnnotation {
     GlobalKey<State<StatefulWidget>> childKey,
     int seed,
   ) {
-    final renderBox =
-        childKey.currentContext?.findRenderObject() as RenderBox?;
+    final renderBox = childKey.currentContext?.findRenderObject() as RenderBox?;
     final size = renderBox?.size ?? Size.zero;
     final width = size.width;
     final height = size.height;

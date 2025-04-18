@@ -30,7 +30,10 @@ class RoughAnnotationRegistry {
     list.add(_AnnotationEntry(safeSeq, start, reset));
   }
 
-  static void markGroupForAutoStart(String group, {Duration delayBetween = const Duration(milliseconds: 300),}) {
+  static void markGroupForAutoStart(
+    String group, {
+    Duration delayBetween = const Duration(milliseconds: 300),
+  }) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showGroup(group, delayBetween: delayBetween);
     });

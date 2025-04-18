@@ -36,7 +36,6 @@ abstract class RoughAnnotation extends StatefulWidget {
   State<RoughAnnotation> createState() => _RoughAnnotationState();
 }
 
-
 class _RoughAnnotationState extends State<RoughAnnotation>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
@@ -81,7 +80,9 @@ class _RoughAnnotationState extends State<RoughAnnotation>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _animation,
-      builder: (_, __) => widget.buildWithAnimation(context, _animation, _childKey, _seed),
+      builder:
+          (_, __) =>
+              widget.buildWithAnimation(context, _animation, _childKey, _seed),
     );
   }
 }

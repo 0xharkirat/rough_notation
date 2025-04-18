@@ -10,20 +10,14 @@ class AnnotationTestPage extends StatefulWidget {
 }
 
 class _AnnotationTestPageState extends State<AnnotationTestPage> {
-  final _underlineController = RoughAnnotationController(
-    autoPlay: true,
-    
-  );
+  final _underlineController = RoughAnnotationController(autoPlay: true);
 
   @override
   void initState() {
     super.initState();
 
     // Auto-start the 'demo' group
-    RoughAnnotationRegistry.markGroupForAutoStart(
-      'demo',
-   
-    );
+    RoughAnnotationRegistry.markGroupForAutoStart('demo');
   }
 
   @override

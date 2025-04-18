@@ -33,7 +33,6 @@ class LinePainter extends CustomPainter {
     this.seed = 0,
     required this.lines,
     this.strokeCap = StrokeCap.round,
-
   });
 
   @override
@@ -45,7 +44,6 @@ class LinePainter extends CustomPainter {
           ..strokeWidth = strokeWidth
           ..strokeCap = strokeCap;
 
-
     for (int i = 0; i < lines.length; i++) {
       final line = lines[i];
       if (progress < line.fromProgress) continue;
@@ -55,7 +53,7 @@ class LinePainter extends CustomPainter {
           .clamp(0.0, 1.0);
 
       final rand = Random(seed + i);
-      
+
       final fullPath = _buildSketchPath(line, rand);
 
       final totalLength = fullPath.computeMetrics().fold(
@@ -104,6 +102,7 @@ class LinePainter extends CustomPainter {
     return oldDelegate.progress != progress ||
         oldDelegate.color != color ||
         oldDelegate.strokeWidth != strokeWidth ||
-        oldDelegate.seed != seed || oldDelegate.lines != lines;
+        oldDelegate.seed != seed ||
+        oldDelegate.lines != lines;
   }
 }

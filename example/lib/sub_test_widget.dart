@@ -35,14 +35,12 @@ class SubTestWidget extends StatelessWidget {
         const SizedBox(height: 24),
         RoughCrossedOffAnnotation(
           group: 'demo',
-          sequence:8,
+          sequence: 8,
           child: const Text(
             "Step 8: Crossed Off",
             style: TextStyle(fontSize: 24),
           ),
         ),
-      
-        
       ],
     );
   }

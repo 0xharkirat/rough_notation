@@ -38,11 +38,12 @@ class ArcPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
+    final paint =
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = strokeWidth
+          ..strokeCap = StrokeCap.round;
 
     for (int i = 0; i < arcs.length; i++) {
       final arc = arcs[i];
@@ -68,8 +69,7 @@ class ArcPainter extends CustomPainter {
         final t = j / fullSteps;
         if (t > effectiveProgress) break;
 
-        final angle = arc.fromAngle +
-            (arc.clockwise ? 1 : -1) * totalSweep * t;
+        final angle = arc.fromAngle + (arc.clockwise ? 1 : -1) * totalSweep * t;
 
         final jitterAngle = angle + (rand.nextDouble() - 0.5) * 0.04;
         final radiusJitterX = rX * (0.985 + rand.nextDouble() * 0.03);
