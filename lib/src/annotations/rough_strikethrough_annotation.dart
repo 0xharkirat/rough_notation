@@ -1,6 +1,7 @@
 // lib/src/annotations/rough_strikethrough_annotation.dart
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:rough_notation/src/controllers/rough_annotation_registry.dart';
 import 'package:rough_notation/src/utils/colors.dart';
 import '../painters/line_painter.dart';
 
@@ -13,6 +14,8 @@ class RoughStrikethroughAnnotation extends StatefulWidget {
     this.duration = const Duration(milliseconds: 800),
     this.delay = Duration.zero,
     this.padding,
+    this.group,
+    this.sequence,
   });
 
   final Widget child;
@@ -21,12 +24,16 @@ class RoughStrikethroughAnnotation extends StatefulWidget {
   final Duration duration;
   final Duration delay;
   final double? padding;
+  final String? group;
+  final int? sequence;
 
   @override
-  State<RoughStrikethroughAnnotation> createState() => _RoughStrikethroughAnnotationState();
+  State<RoughStrikethroughAnnotation> createState() =>
+      _RoughStrikethroughAnnotationState();
 }
 
-class _RoughStrikethroughAnnotationState extends State<RoughStrikethroughAnnotation>
+class _RoughStrikethroughAnnotationState
+    extends State<RoughStrikethroughAnnotation>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
@@ -39,9 +46,27 @@ class _RoughStrikethroughAnnotationState extends State<RoughStrikethroughAnnotat
     _seed = DateTime.now().microsecondsSinceEpoch;
     _controller = AnimationController(vsync: this, duration: widget.duration);
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    Future.delayed(widget.delay, () {
-      if (mounted) _controller.forward();
-    });
+
+    if (widget.group != null) {
+      // group: delay is controlled by the registry
+      RoughAnnotationRegistry.register(
+        widget.group!,
+        widget.sequence ?? 0,
+        _startAnimation,
+        _reset,
+      );
+    } else {
+      // standalone: respect delay
+      Future.delayed(widget.delay, () => _controller.forward());
+    }
+  }
+
+  Future<void> _startAnimation() async {
+    if (mounted) await _controller.forward(from: 0);
+  }
+
+  void _reset() {
+    _controller.value = 0;
   }
 
   @override
@@ -55,7 +80,8 @@ class _RoughStrikethroughAnnotationState extends State<RoughStrikethroughAnnotat
     return AnimatedBuilder(
       animation: _animation,
       builder: (_, __) {
-        final renderBox = _childKey.currentContext?.findRenderObject() as RenderBox?;
+        final renderBox =
+            _childKey.currentContext?.findRenderObject() as RenderBox?;
         final size = renderBox?.size ?? Size.zero;
         final width = size.width;
         final height = size.height;
@@ -86,13 +112,11 @@ class _RoughStrikethroughAnnotationState extends State<RoughStrikethroughAnnotat
             seed: _seed,
           ),
           child: Padding(
-            padding: widget.padding != null 
-                ? EdgeInsets.symmetric(vertical: widget.padding!) 
-                : EdgeInsets.zero,
-            child: KeyedSubtree(
-              key: _childKey,
-              child: widget.child,
-            ),
+            padding:
+                widget.padding != null
+                    ? EdgeInsets.symmetric(vertical: widget.padding!)
+                    : EdgeInsets.zero,
+            child: KeyedSubtree(key: _childKey, child: widget.child),
           ),
         );
       },

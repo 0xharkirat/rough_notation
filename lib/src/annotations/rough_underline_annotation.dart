@@ -1,6 +1,7 @@
 // lib/src/annotations/rough_underline_annotation.dart
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:rough_notation/src/controllers/rough_annotation_registry.dart';
 import 'package:rough_notation/src/utils/colors.dart';
 import '../painters/line_painter.dart';
 
@@ -13,6 +14,8 @@ class RoughUnderlineAnnotation extends StatefulWidget {
     this.duration = const Duration(milliseconds: 800),
     this.delay = Duration.zero,
     this.padding,
+    this.group,
+    this.sequence,
   });
 
   final Widget child;
@@ -21,9 +24,12 @@ class RoughUnderlineAnnotation extends StatefulWidget {
   final Duration duration;
   final Duration delay;
   final double? padding;
+  final String? group;
+  final int? sequence;
 
   @override
-  State<RoughUnderlineAnnotation> createState() => _RoughUnderlineAnnotationState();
+  State<RoughUnderlineAnnotation> createState() =>
+      _RoughUnderlineAnnotationState();
 }
 
 class _RoughUnderlineAnnotationState extends State<RoughUnderlineAnnotation>
@@ -33,16 +39,35 @@ class _RoughUnderlineAnnotationState extends State<RoughUnderlineAnnotation>
   late final int _seed;
   final GlobalKey _childKey = GlobalKey();
 
-  @override
-  void initState() {
-    super.initState();
-    _seed = DateTime.now().microsecondsSinceEpoch;
-    _controller = AnimationController(vsync: this, duration: widget.duration);
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    Future.delayed(widget.delay, () {
-      if (mounted) _controller.forward();
-    });
+ @override
+void initState() {
+  super.initState();
+  _seed = DateTime.now().microsecondsSinceEpoch;
+  _controller = AnimationController(vsync: this, duration: widget.duration);
+  _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+
+  if (widget.group != null) {
+    // group: delay is controlled by the registry
+    RoughAnnotationRegistry.register(
+      widget.group!,
+      widget.sequence ?? 0,
+      _startAnimation,
+      _reset,
+    );
+  } else {
+    // standalone: respect delay
+    Future.delayed(widget.delay, () => _controller.forward());
   }
+}
+
+Future<void> _startAnimation() async {
+  if (mounted) await _controller.forward(from: 0);
+}
+
+void _reset() {
+  _controller.value = 0;
+}
+
 
   @override
   void dispose() {
@@ -55,7 +80,8 @@ class _RoughUnderlineAnnotationState extends State<RoughUnderlineAnnotation>
     return AnimatedBuilder(
       animation: _animation,
       builder: (_, __) {
-        final renderBox = _childKey.currentContext?.findRenderObject() as RenderBox?;
+        final renderBox =
+            _childKey.currentContext?.findRenderObject() as RenderBox?;
         final size = renderBox?.size ?? Size.zero;
         final width = size.width;
         final height = size.height;
@@ -87,10 +113,7 @@ class _RoughUnderlineAnnotationState extends State<RoughUnderlineAnnotation>
           ),
           child: Padding(
             padding: EdgeInsets.only(bottom: widget.padding ?? 0.0),
-            child: KeyedSubtree(
-              key: _childKey,
-              child: widget.child,
-            ),
+            child: KeyedSubtree(key: _childKey, child: widget.child),
           ),
         );
       },

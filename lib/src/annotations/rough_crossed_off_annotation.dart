@@ -1,6 +1,7 @@
 // lib/src/annotations/rough_crossedoff_annotation.dart
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:rough_notation/src/controllers/rough_annotation_registry.dart';
 import 'package:rough_notation/src/utils/colors.dart';
 import '../painters/line_painter.dart';
 
@@ -13,6 +14,8 @@ class RoughCrossedOffAnnotation extends StatefulWidget {
     this.duration = const Duration(milliseconds: 1000),
     this.delay = Duration.zero,
     this.padding,
+    this.group,
+    this.sequence,
   });
 
   final Widget child;
@@ -21,9 +24,12 @@ class RoughCrossedOffAnnotation extends StatefulWidget {
   final Duration duration;
   final Duration delay;
   final double? padding;
+  final String? group;
+  final int? sequence;
 
   @override
-  State<RoughCrossedOffAnnotation> createState() => _RoughCrossedOffAnnotationState();
+  State<RoughCrossedOffAnnotation> createState() =>
+      _RoughCrossedOffAnnotationState();
 }
 
 class _RoughCrossedOffAnnotationState extends State<RoughCrossedOffAnnotation>
@@ -39,9 +45,27 @@ class _RoughCrossedOffAnnotationState extends State<RoughCrossedOffAnnotation>
     _seed = DateTime.now().microsecondsSinceEpoch;
     _controller = AnimationController(vsync: this, duration: widget.duration);
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    Future.delayed(widget.delay, () {
-      if (mounted) _controller.forward();
-    });
+
+    if (widget.group != null) {
+      // group: delay is controlled by the registry
+      RoughAnnotationRegistry.register(
+        widget.group!,
+        widget.sequence ?? 0,
+        _startAnimation,
+        _reset,
+      );
+    } else {
+      // standalone: respect delay
+      Future.delayed(widget.delay, () => _controller.forward());
+    }
+  }
+
+  Future<void> _startAnimation() async {
+    if (mounted) await _controller.forward(from: 0);
+  }
+
+  void _reset() {
+    _controller.value = 0;
   }
 
   @override
@@ -55,7 +79,8 @@ class _RoughCrossedOffAnnotationState extends State<RoughCrossedOffAnnotation>
     return AnimatedBuilder(
       animation: _animation,
       builder: (_, __) {
-        final renderBox = _childKey.currentContext?.findRenderObject() as RenderBox?;
+        final renderBox =
+            _childKey.currentContext?.findRenderObject() as RenderBox?;
         final size = renderBox?.size ?? Size.zero;
         final width = size.width;
         final height = size.height;
@@ -100,11 +125,8 @@ class _RoughCrossedOffAnnotationState extends State<RoughCrossedOffAnnotation>
             seed: _seed,
           ),
           child: Padding(
-            padding: EdgeInsets.all(widget.padding?? 0.0),
-            child: KeyedSubtree(
-              key: _childKey,
-              child: widget.child,
-            ),
+            padding: EdgeInsets.all(widget.padding ?? 0.0),
+            child: KeyedSubtree(key: _childKey, child: widget.child),
           ),
         );
       },

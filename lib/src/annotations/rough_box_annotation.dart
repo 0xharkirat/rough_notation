@@ -1,6 +1,7 @@
 // lib/src/annotations/rough_box_annotation.dart
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:rough_notation/src/controllers/rough_annotation_registry.dart';
 import 'package:rough_notation/src/utils/colors.dart';
 import '../painters/line_painter.dart';
 
@@ -14,6 +15,8 @@ class RoughBoxAnnotation extends StatefulWidget {
     this.delay = Duration.zero,
     this.padding = 4.0,
     this.looseCorners = true,
+    this.group,
+    this.sequence,
   });
 
   final Widget child;
@@ -23,6 +26,8 @@ class RoughBoxAnnotation extends StatefulWidget {
   final Duration delay;
   final double padding;
   final bool looseCorners;
+  final String? group;
+  final int? sequence;
 
   @override
   State<RoughBoxAnnotation> createState() => _RoughBoxAnnotationState();
@@ -41,9 +46,27 @@ class _RoughBoxAnnotationState extends State<RoughBoxAnnotation>
     _seed = DateTime.now().microsecondsSinceEpoch;
     _controller = AnimationController(vsync: this, duration: widget.duration);
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    Future.delayed(widget.delay, () {
-      if (mounted) _controller.forward();
-    });
+
+    if (widget.group != null) {
+      // group: delay is controlled by the registry
+      RoughAnnotationRegistry.register(
+        widget.group!,
+        widget.sequence ?? 0,
+        _startAnimation,
+        _reset,
+      );
+    } else {
+      // standalone: respect delay
+      Future.delayed(widget.delay, () => _controller.forward());
+    }
+  }
+
+  Future<void> _startAnimation() async {
+    if (mounted) await _controller.forward(from: 0);
+  }
+
+  void _reset() {
+    _controller.value = 0;
   }
 
   @override
@@ -54,7 +77,10 @@ class _RoughBoxAnnotationState extends State<RoughBoxAnnotation>
 
   Offset _jittered(Offset original, Random rand) {
     if (!widget.looseCorners) return original;
-    return original.translate(rand.nextDouble() * 6 - 3, rand.nextDouble() * 6 - 3);
+    return original.translate(
+      rand.nextDouble() * 6 - 3,
+      rand.nextDouble() * 6 - 3,
+    );
   }
 
   @override
@@ -62,7 +88,8 @@ class _RoughBoxAnnotationState extends State<RoughBoxAnnotation>
     return AnimatedBuilder(
       animation: _animation,
       builder: (_, __) {
-        final renderBox = _childKey.currentContext?.findRenderObject() as RenderBox?;
+        final renderBox =
+            _childKey.currentContext?.findRenderObject() as RenderBox?;
         final size = renderBox?.size ?? Size.zero;
         final width = size.width + (widget.padding);
         final height = size.height + (widget.padding);
@@ -132,10 +159,7 @@ class _RoughBoxAnnotationState extends State<RoughBoxAnnotation>
           ),
           child: Padding(
             padding: EdgeInsets.all(widget.padding),
-            child: KeyedSubtree(
-              key: _childKey,
-              child: widget.child,
-            ),
+            child: KeyedSubtree(key: _childKey, child: widget.child),
           ),
         );
       },

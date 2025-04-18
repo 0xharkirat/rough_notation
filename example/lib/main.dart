@@ -1,3 +1,4 @@
+import 'package:example/annotation_test_page.dart';
 import 'package:example/home_page.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const HomePage(),
+      home: const AnnotationTestPage(),
     );
   }
 }
