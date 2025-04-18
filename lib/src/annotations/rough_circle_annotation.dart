@@ -1,46 +1,48 @@
-// lib/src/annotations/rough_crossedoff_annotation.dart
+// lib/src/annotations/rough_circle_annotation.dart
+
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rough_notation/rough_notation.dart';
+import 'package:rough_notation/src/painters/arc_painter.dart';
 import 'package:rough_notation/src/utils/colors.dart';
-import '../painters/line_painter.dart';
 
-class RoughCrossedOffAnnotation extends StatefulWidget {
-  const RoughCrossedOffAnnotation({
+
+class RoughCircleAnnotation extends StatefulWidget {
+  const RoughCircleAnnotation({
     super.key,
     required this.child,
-    this.color = kCrossedOffColor,
-    this.strokeWidth = 2.0,
-    this.duration = const Duration(milliseconds: 1000),
+    this.color = kCircleColor,
+    this.strokeWidth = 2,
+    this.padding = 6.0,
+    this.duration = const Duration(milliseconds: 800),
     this.delay = Duration.zero,
-    this.padding,
+    this.controller,
     this.group,
-    this.sequence, this.controller,
+    this.sequence,
   });
 
   final Widget child;
   final Color color;
   final double strokeWidth;
+  final double padding;
   final Duration duration;
   final Duration delay;
-  final double? padding;
+  final RoughAnnotationController? controller;
   final String? group;
   final int? sequence;
-  final RoughAnnotationController? controller;
 
   @override
-  State<RoughCrossedOffAnnotation> createState() =>
-      _RoughCrossedOffAnnotationState();
+  State<RoughCircleAnnotation> createState() => _RoughCircleAnnotationState();
 }
 
-class _RoughCrossedOffAnnotationState extends State<RoughCrossedOffAnnotation>
+class _RoughCircleAnnotationState extends State<RoughCircleAnnotation>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
   late final int _seed;
   final GlobalKey _childKey = GlobalKey();
 
-   @override
+  @override
   void initState() {
     super.initState();
     _seed = DateTime.now().microsecondsSinceEpoch;
@@ -55,17 +57,14 @@ class _RoughCrossedOffAnnotationState extends State<RoughCrossedOffAnnotation>
         _reset,
       );
     } else if (widget.controller != null) {
-      widget.controller!.bind(
-        start: () => _startAnimation(),
-        reset: () => _reset(),
-      );
+      widget.controller!.bind(start: _startAnimation, reset: _reset);
     } else {
-      // No group, no controller — fallback autoplay
       Future.delayed(widget.delay, () => _controller.forward());
     }
   }
 
   Future<void> _startAnimation() async {
+    await Future.delayed(widget.delay);
     if (mounted) await _controller.forward(from: 0);
   }
 
@@ -84,54 +83,56 @@ class _RoughCrossedOffAnnotationState extends State<RoughCrossedOffAnnotation>
     return AnimatedBuilder(
       animation: _animation,
       builder: (_, __) {
-        final renderBox =
-            _childKey.currentContext?.findRenderObject() as RenderBox?;
+        final renderBox = _childKey.currentContext?.findRenderObject() as RenderBox?;
         final size = renderBox?.size ?? Size.zero;
-        final width = size.width;
-        final height = size.height;
 
-        final random = Random(_seed);
-        final offset1 = random.nextInt(5) - 2;
-        final offset2 = random.nextInt(5) - 2;
+        final bounds = Rect.fromLTWH(
+          -widget.padding / 2,
+          -widget.padding / 2,
+          size.width + widget.padding,
+          size.height + widget.padding,
+        );
 
-        final lines = [
-          SketchLine(
-            start: Offset(0, 0),
-            end: Offset(width, height),
+        final offset = 2.0;
+        final offsetBounds = Rect.fromLTWH(
+          bounds.left + offset,
+          bounds.top + offset,
+          bounds.width,
+          bounds.height,
+        );
+
+        final arcs = [
+          SketchArc(
+            bounds: bounds,
+            fromAngle: 0,
+            toAngle: 2 * pi,
             fromProgress: 0.0,
-            toProgress: 0.25,
-          ),
-          SketchLine(
-            start: Offset(width, height),
-            end: Offset(0.0 + offset1, 0.0 + offset2),
-            fromProgress: 0.25,
             toProgress: 0.5,
           ),
-          SketchLine(
-            start: Offset(width, 0),
-            end: Offset(0, height),
+          SketchArc(
+            bounds: offsetBounds,
+            fromAngle: 0,
+            toAngle: 2 * pi,
             fromProgress: 0.5,
-            toProgress: 0.75,
-          ),
-          SketchLine(
-            start: Offset(0, height),
-            end: Offset(width + offset2, 0.0 + offset1),
-            fromProgress: 0.75,
             toProgress: 1.0,
           ),
         ];
 
+
         return CustomPaint(
-          foregroundPainter: LinePainter(
-            lines: lines,
+          foregroundPainter: ArcPainter(
+            arcs: arcs,
             color: widget.color,
             strokeWidth: widget.strokeWidth,
-            progress: _animation.value,
             seed: _seed,
+            progress: _animation.value,
           ),
           child: Padding(
-            padding: EdgeInsets.all(widget.padding ?? 0.0),
-            child: KeyedSubtree(key: _childKey, child: widget.child),
+            padding: EdgeInsets.all(widget.padding),
+            child: KeyedSubtree(
+              key: _childKey,
+              child: widget.child,
+            ),
           ),
         );
       },

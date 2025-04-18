@@ -10,13 +10,21 @@ class AnnotationTestPage extends StatefulWidget {
 }
 
 class _AnnotationTestPageState extends State<AnnotationTestPage> {
+  final _underlineController = RoughAnnotationController(
+    autoPlay: true,
+    delay: const Duration(seconds: 2),
+  );
+
   @override
   void initState() {
     super.initState();
 
     // Auto-start the 'demo' group
-    RoughAnnotationRegistry.markGroupForAutoStart('demo', 
-        delayBetween: const Duration(microseconds: 500));
+    RoughAnnotationRegistry.markGroupForAutoStart(
+      'demo',
+      delayBetween: const Duration(microseconds: 500),
+    );
+    
   }
 
   @override
@@ -27,6 +35,13 @@ class _AnnotationTestPageState extends State<AnnotationTestPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            RoughUnderlineAnnotation(
+              controller: _underlineController,
+              delay: const Duration(seconds: 2),
+              child: const Text("Manually Triggered Underline"),
+            ),
+
+            const SizedBox(height: 20),
             //
             Text("Standalone demo", style: TextStyle(fontSize: 24)),
             const SizedBox(height: 24),
@@ -51,6 +66,7 @@ class _AnnotationTestPageState extends State<AnnotationTestPage> {
             ),
             const SizedBox(height: 24),
             RoughUnderlineAnnotation(
+              controller: _underlineController,
               group: 'demo',
               sequence: 1,
               delay: Duration(seconds: 2), // This should be ignored in group
@@ -68,6 +84,7 @@ class _AnnotationTestPageState extends State<AnnotationTestPage> {
             ),
             const SizedBox(height: 24),
             RoughCrossedOffAnnotation(
+
               group: 'demo',
               sequence: 4,
               child: const Text(
@@ -77,12 +94,23 @@ class _AnnotationTestPageState extends State<AnnotationTestPage> {
             ),
             const SizedBox(height: 40),
 
-            SubTestWidget(),
+            RoughCircleAnnotation(
+  child: Text(
+    "Look at me!",
+    style: TextStyle(fontSize: 24),
+  ),
+)
+
+
+            // SubTestWidget(),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => RoughAnnotationRegistry.showGroup('demo'),
+        onPressed: () {
+          // RoughAnnotationRegistry.showGroup('demo');
+          _underlineController.show();
+        },
         child: const Icon(Icons.play_arrow),
       ),
     );

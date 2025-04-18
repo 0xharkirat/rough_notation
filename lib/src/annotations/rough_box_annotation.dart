@@ -1,6 +1,7 @@
 // lib/src/annotations/rough_box_annotation.dart
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:rough_notation/rough_notation.dart';
 import 'package:rough_notation/src/controllers/rough_annotation_registry.dart';
 import 'package:rough_notation/src/utils/colors.dart';
 import '../painters/line_painter.dart';
@@ -17,6 +18,7 @@ class RoughBoxAnnotation extends StatefulWidget {
     this.looseCorners = true,
     this.group,
     this.sequence,
+    this.controller,
   });
 
   final Widget child;
@@ -28,6 +30,7 @@ class RoughBoxAnnotation extends StatefulWidget {
   final bool looseCorners;
   final String? group;
   final int? sequence;
+  final RoughAnnotationController? controller;
 
   @override
   State<RoughBoxAnnotation> createState() => _RoughBoxAnnotationState();
@@ -48,15 +51,19 @@ class _RoughBoxAnnotationState extends State<RoughBoxAnnotation>
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
 
     if (widget.group != null) {
-      // group: delay is controlled by the registry
       RoughAnnotationRegistry.register(
         widget.group!,
         widget.sequence ?? 0,
         _startAnimation,
         _reset,
       );
+    } else if (widget.controller != null) {
+      widget.controller!.bind(
+        start: () => _startAnimation(),
+        reset: () => _reset(),
+      );
     } else {
-      // standalone: respect delay
+      // No group, no controller — fallback autoplay
       Future.delayed(widget.delay, () => _controller.forward());
     }
   }

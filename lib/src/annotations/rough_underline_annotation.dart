@@ -1,6 +1,7 @@
 // lib/src/annotations/rough_underline_annotation.dart
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:rough_notation/src/controllers/rough_annotation_controller.dart';
 import 'package:rough_notation/src/controllers/rough_annotation_registry.dart';
 import 'package:rough_notation/src/utils/colors.dart';
 import '../painters/line_painter.dart';
@@ -16,6 +17,7 @@ class RoughUnderlineAnnotation extends StatefulWidget {
     this.padding,
     this.group,
     this.sequence,
+    this.controller,
   });
 
   final Widget child;
@@ -26,6 +28,7 @@ class RoughUnderlineAnnotation extends StatefulWidget {
   final double? padding;
   final String? group;
   final int? sequence;
+  final RoughAnnotationController? controller;
 
   @override
   State<RoughUnderlineAnnotation> createState() =>
@@ -39,35 +42,38 @@ class _RoughUnderlineAnnotationState extends State<RoughUnderlineAnnotation>
   late final int _seed;
   final GlobalKey _childKey = GlobalKey();
 
- @override
-void initState() {
-  super.initState();
-  _seed = DateTime.now().microsecondsSinceEpoch;
-  _controller = AnimationController(vsync: this, duration: widget.duration);
-  _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+  @override
+  void initState() {
+    super.initState();
+    _seed = DateTime.now().microsecondsSinceEpoch;
+    _controller = AnimationController(vsync: this, duration: widget.duration);
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
 
-  if (widget.group != null) {
-    // group: delay is controlled by the registry
-    RoughAnnotationRegistry.register(
-      widget.group!,
-      widget.sequence ?? 0,
-      _startAnimation,
-      _reset,
-    );
-  } else {
-    // standalone: respect delay
-    Future.delayed(widget.delay, () => _controller.forward());
+    if (widget.group != null) {
+      RoughAnnotationRegistry.register(
+        widget.group!,
+        widget.sequence ?? 0,
+        _startAnimation,
+        _reset,
+      );
+    } else if (widget.controller != null) {
+      widget.controller!.bind(
+        start: () => _startAnimation(),
+        reset: () => _reset(),
+      );
+    } else {
+      // No group, no controller — fallback autoplay
+      Future.delayed(widget.delay, () => _controller.forward());
+    }
   }
-}
 
-Future<void> _startAnimation() async {
-  if (mounted) await _controller.forward(from: 0);
-}
+  Future<void> _startAnimation() async {
+    if (mounted) await _controller.forward(from: 0);
+  }
 
-void _reset() {
-  _controller.value = 0;
-}
-
+  void _reset() {
+    _controller.value = 0;
+  }
 
   @override
   void dispose() {
