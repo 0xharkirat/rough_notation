@@ -36,7 +36,7 @@ class _NoAnimationSectionState extends State<NoAnimationSection> {
           color: Colors.black,
           duration: Duration.zero,
           controller: _controller,
-          child: Text(
+          child: SelectableText(
             'No Animation',
             style: ShadTheme.of(
               context,

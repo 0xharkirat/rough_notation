@@ -4,6 +4,7 @@ import 'package:playground/widgets/bracket_section.dart';
 import 'package:playground/widgets/circle_section.dart';
 import 'package:playground/widgets/crossed_off_section.dart';
 import 'package:playground/widgets/group_section.dart';
+import 'package:playground/widgets/header_section.dart';
 import 'package:playground/widgets/highlight_section.dart';
 import 'package:playground/widgets/no_animation_section.dart';
 import 'package:playground/widgets/strikethrough_section.dart';
@@ -21,6 +22,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           
           children: [
+            HeaderSection(),
             UnderlineSection(),
             BoxSection(),
             CircleSection(),
