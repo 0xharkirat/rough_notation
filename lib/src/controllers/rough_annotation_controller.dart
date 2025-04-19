@@ -5,22 +5,21 @@ import 'package:flutter/widgets.dart';
 class RoughAnnotationController {
   final bool autoPlay;
   final Duration delay;
-  void Function()? _start;
-  void Function()? _reset;
+
+  final List<VoidCallback> _starts = [];
+  final List<VoidCallback> _resets = [];
 
   RoughAnnotationController({
     this.autoPlay = false,
     this.delay = Duration.zero,
   });
 
-  void bind({required void Function() start, required void Function() reset}) {
-    _start = start;
-    _reset = reset;
+  void bind({required VoidCallback start, required VoidCallback reset}) {
+    _starts.add(start);
+    _resets.add(reset);
 
     if (autoPlay) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        show(delay);
-      });
+      WidgetsBinding.instance.addPostFrameCallback((_) => show());
     }
   }
 
@@ -29,8 +28,19 @@ class RoughAnnotationController {
     final wait = delayOverride ?? delay;
     await Future.delayed(wait);
 
-    _start?.call();
+    for (final start in _starts) {
+      start.call();
+    }
   }
 
-  void reset() => _reset?.call();
+  void reset() {
+    for (final reset in _resets) {
+      reset.call();
+    }
+  }
+
+  void dispose() {
+    _starts.clear();
+    _resets.clear();
+  }
 }

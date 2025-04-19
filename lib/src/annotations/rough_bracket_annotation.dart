@@ -13,7 +13,7 @@ class RoughBracketAnnotation extends RoughAnnotation {
     super.strokeWidth = 2.0,
     super.duration = const Duration(milliseconds: 800),
     super.delay = Duration.zero,
-    super.padding = 6.0,
+    super.padding = 8.0,
     this.brackets = const ['left', 'right'],
     super.group,
     super.sequence,
@@ -32,8 +32,20 @@ class RoughBracketAnnotation extends RoughAnnotation {
     final renderBox = childKey.currentContext?.findRenderObject() as RenderBox?;
     final size = renderBox?.size ?? Size.zero;
 
-    final width = size.width + (padding ?? 0) * 2;
-    final height = size.height + (padding ?? 0) * 2;
+    final paddingValue = padding ?? 0.0;
+    final rect = Rect.fromLTWH(
+      -paddingValue,
+      -paddingValue,
+      size.width + paddingValue * 2,
+      size.height + paddingValue * 2,
+    );
+
+    final double left = rect.left;
+    final double top = rect.top;
+    final double right = rect.right;
+    final double bottom = rect.bottom;
+    
+
     final lines = <SketchLine>[];
 
     final totalBrackets = brackets.length;
@@ -48,20 +60,20 @@ class RoughBracketAnnotation extends RoughAnnotation {
         case 'left':
           lines.addAll([
             SketchLine(
-              start: Offset(12, 0),
-              end: Offset(0, 0),
+              start: Offset(left + 12, top),
+              end: Offset(left, top),
               fromProgress: bracketStart,
               toProgress: bracketStart + unit,
             ),
             SketchLine(
-              start: Offset(0, 0),
-              end: Offset(0, height),
+              start: Offset(left, top),
+              end: Offset(left, bottom),
               fromProgress: bracketStart + unit,
               toProgress: bracketStart + 2 * unit,
             ),
             SketchLine(
-              start: Offset(0, height),
-              end: Offset(12, height),
+              start: Offset(left, bottom),
+              end: Offset(left + 12, bottom),
               fromProgress: bracketStart + 2 * unit,
               toProgress: bracketEnd,
             ),
@@ -70,20 +82,17 @@ class RoughBracketAnnotation extends RoughAnnotation {
         case 'right':
           lines.addAll([
             SketchLine(
-              start: Offset(width - 12, 0),
-              end: Offset(width, 0),
+              start: Offset(right - 12, top), end: Offset(right, top),
               fromProgress: bracketStart,
               toProgress: bracketStart + unit,
             ),
             SketchLine(
-              start: Offset(width, 0),
-              end: Offset(width, height),
+              start: Offset(right, top), end: Offset(right, bottom),
               fromProgress: bracketStart + unit,
               toProgress: bracketStart + 2 * unit,
             ),
             SketchLine(
-              start: Offset(width, height),
-              end: Offset(width - 12, height),
+              start: Offset(right, bottom), end: Offset(right - 12, bottom),
               fromProgress: bracketStart + 2 * unit,
               toProgress: bracketEnd,
             ),
@@ -92,20 +101,17 @@ class RoughBracketAnnotation extends RoughAnnotation {
         case 'top':
           lines.addAll([
             SketchLine(
-              start: Offset(0, 12),
-              end: Offset(0, 0),
+             start: Offset(left, top + 12), end: Offset(left, top),
               fromProgress: bracketStart,
               toProgress: bracketStart + unit,
             ),
             SketchLine(
-              start: Offset(0, 0),
-              end: Offset(width, 0),
+              start: Offset(left, top), end: Offset(right, top),
               fromProgress: bracketStart + unit,
               toProgress: bracketStart + 2 * unit,
             ),
             SketchLine(
-              start: Offset(width, 0),
-              end: Offset(width, 12),
+              start: Offset(right, top), end: Offset(right, top + 12),
               fromProgress: bracketStart + 2 * unit,
               toProgress: bracketEnd,
             ),
@@ -114,20 +120,17 @@ class RoughBracketAnnotation extends RoughAnnotation {
         case 'bottom':
           lines.addAll([
             SketchLine(
-              start: Offset(0, height - 12),
-              end: Offset(0, height),
+              start: Offset(left, bottom - 12), end: Offset(left, bottom),
               fromProgress: bracketStart,
               toProgress: bracketStart + unit,
             ),
             SketchLine(
-              start: Offset(0, height),
-              end: Offset(width, height),
+              start: Offset(left, bottom), end: Offset(right, bottom),
               fromProgress: bracketStart + unit,
               toProgress: bracketStart + 2 * unit,
             ),
             SketchLine(
-              start: Offset(width, height),
-              end: Offset(width, height - 12),
+              start: Offset(right, bottom), end: Offset(right, bottom - 12),
               fromProgress: bracketStart + 2 * unit,
               toProgress: bracketEnd,
             ),
@@ -144,10 +147,7 @@ class RoughBracketAnnotation extends RoughAnnotation {
         progress: animation.value,
         seed: seed,
       ),
-      child: Padding(
-        padding: EdgeInsets.all(padding ?? 0.0),
-        child: KeyedSubtree(key: childKey, child: child),
-      ),
+      child: KeyedSubtree(key: childKey, child: child),
     );
   }
 }

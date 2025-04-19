@@ -13,7 +13,7 @@ class RoughCircleAnnotation extends RoughAnnotation {
     required super.child,
     super.color = kCircleColor,
     super.strokeWidth = 2,
-    super.padding = 6.0,
+    super.padding,
     super.duration = const Duration(milliseconds: 800),
     super.delay = Duration.zero,
     super.controller,
@@ -32,10 +32,10 @@ class RoughCircleAnnotation extends RoughAnnotation {
     final size = renderBox?.size ?? Size.zero;
 
     final bounds = Rect.fromLTWH(
-      -padding! / 2,
-      -padding! / 2,
-      size.width + padding!,
-      size.height + padding!,
+      -(padding ??0) / 2,
+      -(padding ?? 0) / 2,
+      size.width + (padding ?? 0),
+      size.height + (padding ?? 0),
     );
 
     final offset = 2.0;
@@ -72,7 +72,7 @@ class RoughCircleAnnotation extends RoughAnnotation {
         progress: animation.value,
       ),
       child: Padding(
-        padding: EdgeInsets.all(padding!),
+        padding: EdgeInsets.all(padding?? 0),
         child: KeyedSubtree(key: childKey, child: child),
       ),
     );

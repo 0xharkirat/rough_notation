@@ -13,7 +13,7 @@ class RoughBoxAnnotation extends RoughAnnotation {
     super.strokeWidth = 2.0,
     super.duration = const Duration(milliseconds: 1200),
     super.delay = Duration.zero,
-    super.padding = 4.0,
+    super.padding,
     this.looseCorners = true,
     super.group,
     super.sequence,
