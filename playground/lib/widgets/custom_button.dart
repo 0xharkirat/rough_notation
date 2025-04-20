@@ -21,7 +21,9 @@ class CustomButton extends StatelessWidget {
         ),
         child: Text(
           text?.toUpperCase() ?? 'ANNOTATE',
-          style: ShadTheme.of(context).textTheme.p,
+          style: ShadTheme.of(context).textTheme.p.copyWith(
+            fontWeight: FontWeight.w500
+          ),
         ),
       ),
     );

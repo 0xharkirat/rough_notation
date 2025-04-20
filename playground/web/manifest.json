@@ -1,11 +1,11 @@
 {
-    "name": "playground",
-    "short_name": "playground",
+    "name": "RoughNotation Flutter",
+    "short_name": "RoughNotation Flutter",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "A Flutter implementation of Rough Notation, the hand-drawn-style annotation library for widgets.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

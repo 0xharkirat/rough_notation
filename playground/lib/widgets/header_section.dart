@@ -21,13 +21,13 @@ class _HeaderSectionState extends State<HeaderSection> {
     RoughAnnotationRegistry.markGroupForAutoStart('header');
   }
 
-  /// 
+  ///
   Future<void> _launchUrl(String url) async {
-  final Uri url0 = Uri.parse(url);
-  if (!await launchUrl(url0)) {
-    throw Exception('Could not launch $url0');
+    final Uri url0 = Uri.parse(url);
+    if (!await launchUrl(url0)) {
+      throw Exception('Could not launch $url0');
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +129,7 @@ class _HeaderSectionState extends State<HeaderSection> {
                   child: InkWell(
                     onTap: () {
                       //https://x.com/preetster
+                      _launchUrl("https://x.com/preetster");
                     },
                     child: Textf(
                       '***Preet Shihn***',
@@ -159,6 +160,9 @@ class _HeaderSectionState extends State<HeaderSection> {
                   child: InkWell(
                     onTap: () {
                       // https://github.com/rough-stuff/rough-notation/graphs/contributors
+                      _launchUrl(
+                        "https://github.com/rough-stuff/rough-notation/graphs/contributors",
+                      );
                     },
                     child: Textf(
                       '*contributors*.',
@@ -184,9 +188,16 @@ class _HeaderSectionState extends State<HeaderSection> {
 
         SizedBox(height: 16),
 
-        CustomButton(text: "View on GitHub", onPressed: () {}),
+        CustomButton(
+          text: "View on GitHub",
+          onPressed: () {
+            _launchUrl("https://github.com/0xharkirat/rough_notation");
+          },
+        ),
         SizedBox(height: 16),
-        CustomButton(onPressed: () {}, text: "View on Pub.dev"),
+        CustomButton(onPressed: () {
+          _launchUrl("https://pub.dev/packages/rough_notation");
+        }, text: "View on Pub.dev"),
 
         SizedBox(height: 32),
 

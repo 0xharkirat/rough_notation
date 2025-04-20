@@ -3,6 +3,7 @@ import 'package:playground/widgets/box_section.dart';
 import 'package:playground/widgets/bracket_section.dart';
 import 'package:playground/widgets/circle_section.dart';
 import 'package:playground/widgets/crossed_off_section.dart';
+import 'package:playground/widgets/footer_section.dart';
 import 'package:playground/widgets/group_section.dart';
 import 'package:playground/widgets/header_section.dart';
 import 'package:playground/widgets/highlight_section.dart';
@@ -33,6 +34,7 @@ class HomePage extends StatelessWidget {
             GroupSection(),
             StylingSection(),
             NoAnimationSection(),
+            FooterSection(),
 
             
           ],

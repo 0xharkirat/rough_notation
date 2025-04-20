@@ -15,12 +15,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShadApp(
       debugShowCheckedModeBanner: false,
-      title: 'Rough Notation Flutter',
+      title: 'RoughNotation Flutter',
       themeMode: ThemeMode.light,
       theme: ShadThemeData(
         colorScheme: ShadNeutralColorScheme.light(),
         brightness: Brightness.light,
-        textTheme: ShadTextTheme.fromGoogleFont(GoogleFonts.inter),
+        textTheme: ShadTextTheme.fromGoogleFont(GoogleFonts.manrope),
       ),
       home: const HomePage(),
     );
