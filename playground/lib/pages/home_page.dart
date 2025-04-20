@@ -12,7 +12,6 @@ import 'package:playground/widgets/strikethrough_section.dart';
 import 'package:playground/widgets/styling_section.dart';
 import 'package:playground/widgets/underline_section.dart';
 
-
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -21,7 +20,6 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
-          
           children: [
             HeaderSection(),
             UnderlineSection(),
@@ -35,8 +33,6 @@ class HomePage extends StatelessWidget {
             StylingSection(),
             NoAnimationSection(),
             FooterSection(),
-
-            
           ],
         ),
       ),

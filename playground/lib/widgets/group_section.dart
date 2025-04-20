@@ -17,7 +17,7 @@ class GroupSection extends StatelessWidget {
           color: Colors.red,
           group: 'group',
           sequence: 3,
-         
+
           child: Text(
             'Annotation Group',
             style: ShadTheme.of(
@@ -29,7 +29,8 @@ class GroupSection extends StatelessWidget {
         SizedBox(height: 16),
         SelectableText.rich(
           TextSpan(
-            text: 'Rough Notation provides a way to order the animation of annotations by creating an ',
+            text:
+                'Rough Notation provides a way to order the animation of annotations by creating an ',
             style: ShadTheme.of(
               context,
             ).textTheme.p.copyWith(fontSize: kBodyFontSize),
@@ -40,7 +41,7 @@ class GroupSection extends StatelessWidget {
                 child: RoughHighlightAnnotation(
                   group: 'group',
                   sequence: 1,
-                  
+
                   child: Text(
                     'Annotation Group',
                     style: ShadTheme.of(
@@ -63,18 +64,19 @@ class GroupSection extends StatelessWidget {
                 child: RoughUnderlineAnnotation(
                   group: 'group',
                   sequence: 2,
-                  
+
                   child: Text(
                     'show',
                     style: ShadTheme.of(
                       context,
-                    ).textTheme.p.copyWith(fontSize: kBodyFontSize, ),
+                    ).textTheme.p.copyWith(fontSize: kBodyFontSize),
                   ),
                 ),
               ),
 
               TextSpan(
-                text: ' is called on the group, the annotations are animated in order.',
+                text:
+                    ' is called on the group, the annotations are animated in order.',
                 style: ShadTheme.of(
                   context,
                 ).textTheme.p.copyWith(fontSize: kBodyFontSize),
@@ -87,7 +89,7 @@ class GroupSection extends StatelessWidget {
 
         CustomButton(
           onPressed: () {
-           RoughAnnotationRegistry.showGroup('group');
+            RoughAnnotationRegistry.showGroup('group');
           },
         ),
       ],

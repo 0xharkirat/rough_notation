@@ -47,7 +47,8 @@ class _NoAnimationSectionState extends State<NoAnimationSection> {
         SizedBox(height: 16),
         SelectableText.rich(
           TextSpan(
-            text: "Of course you don't have to animate the annotation, just set the ",
+            text:
+                "Of course you don't have to animate the annotation, just set the ",
             style: ShadTheme.of(
               context,
             ).textTheme.p.copyWith(fontSize: kBodyFontSize),

@@ -1,32 +1,59 @@
 // lib/src/annotations/rough_box_annotation.dart
+
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rough_notation/src/annotations/rough_annotation.dart';
 import 'package:rough_notation/src/utils/colors.dart';
 import '../painters/line_painter.dart';
 
+/// Draws a hand-drawn-style sketchy box around the widget.
+///
+/// The box is drawn in two rounds for a more organic, double-stroke feel.
+/// Optionally, corners can be jittered to look less perfect via [looseCorners].
 class RoughBoxAnnotation extends RoughAnnotation {
   const RoughBoxAnnotation({
     super.key,
+
+    /// Widget to annotate.
     required super.child,
+
+    /// Stroke color of the box.
     super.color = kBoxColor,
+
+    /// Thickness of the lines.
     super.strokeWidth = 2.0,
+
+    /// Animation duration.
     super.duration = const Duration(milliseconds: 1200),
+
+    /// Delay before animation begins.
     super.delay = Duration.zero,
+
+    /// Padding around the widget.
     super.padding,
+
+    /// If true, adds slight randomness to corner coordinates.
     this.looseCorners = true,
+
+    /// Group name for sequencing with other annotations.
     super.group,
+
+    /// Index in group animation sequence.
     super.sequence,
+
+    /// Manual controller to trigger animation.
     super.controller,
   });
 
   final bool looseCorners;
 
+  /// Adds slight randomness to a given point to create a hand-drawn corner.
+  /// If [looseCorners] is false, the point is returned unchanged.
   Offset _jittered(Offset original, Random rand) {
     if (!looseCorners) return original;
     return original.translate(
-      rand.nextDouble() * 6 - 3,
-      rand.nextDouble() * 6 - 3,
+      rand.nextDouble() * 6 - 3, // -3 to +3
+      rand.nextDouble() * 6 - 3, // -3 to +3
     );
   }
 
@@ -39,13 +66,15 @@ class RoughBoxAnnotation extends RoughAnnotation {
   ) {
     final renderBox = childKey.currentContext?.findRenderObject() as RenderBox?;
     final size = renderBox?.size ?? Size.zero;
+
+    /// Add horizontal & vertical padding to width and height
     final width = size.width + (padding ?? 0);
     final height = size.height + (padding ?? 0);
 
     final rand = Random(seed);
 
     final lines = [
-      // Round 1
+      // Round 1: Top → Right → Bottom → Left
       SketchLine(
         start: _jittered(Offset(0, 0), rand),
         end: _jittered(Offset(width, 0), rand),
@@ -70,7 +99,8 @@ class RoughBoxAnnotation extends RoughAnnotation {
         fromProgress: 0.375,
         toProgress: 0.5,
       ),
-      // Round 2
+
+      // Round 2: Repeat with different jitter
       SketchLine(
         start: _jittered(Offset(0, 0), rand),
         end: _jittered(Offset(width, 0), rand),

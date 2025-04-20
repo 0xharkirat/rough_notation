@@ -1,7 +1,14 @@
 name: rough_notation
-description: "A new Flutter package project."
+description: "Create animated, hand-drawn-style annotations on widgets using Flutter’s CustomPainter. Inspired by the Rough Notation JS library."
 version: 0.0.1
-homepage:
+homepage: https://roughnotation-flutter.web.app/
+repository: https://github.com/0xharkirat/rough_notation
+topics:
+  - animation
+  - custom-painter
+  - annotations
+  - ui
+  - roughjs
 
 environment:
   sdk: ^3.7.2

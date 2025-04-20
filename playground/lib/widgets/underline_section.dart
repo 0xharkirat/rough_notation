@@ -23,7 +23,6 @@ class _UnderlineSectionState extends State<UnderlineSection> {
 
   @override
   void dispose() {
-
     _underlineController.dispose();
     super.dispose();
   }

@@ -63,8 +63,6 @@ class _HighlightSectionState extends State<HighlightSection> {
                   ),
                 ),
               ),
-
-             
             ],
           ),
         ),

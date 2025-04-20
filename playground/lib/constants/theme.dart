@@ -14,5 +14,3 @@ const kNoAnimSectionColor = Color(0xFFECEFF1);
 
 const kBodyFontSize = 18.0;
 const kBodyLineHeight = 1.6;
-
-

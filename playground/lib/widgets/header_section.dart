@@ -195,9 +195,12 @@ class _HeaderSectionState extends State<HeaderSection> {
           },
         ),
         SizedBox(height: 16),
-        CustomButton(onPressed: () {
-          _launchUrl("https://pub.dev/packages/rough_notation");
-        }, text: "View on Pub.dev"),
+        CustomButton(
+          onPressed: () {
+            _launchUrl("https://pub.dev/packages/rough_notation");
+          },
+          text: "View on Pub.dev",
+        ),
 
         SizedBox(height: 32),
 

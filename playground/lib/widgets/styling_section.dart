@@ -49,7 +49,8 @@ class _StylingSectionState extends State<StylingSection> {
         SizedBox(height: 16),
         SelectableText.rich(
           TextSpan(
-            text: 'Various properties of the annotation can be configured, like color, strokeWidth, ',
+            text:
+                'Various properties of the annotation can be configured, like color, strokeWidth, ',
             style: ShadTheme.of(
               context,
             ).textTheme.p.copyWith(fontSize: kBodyFontSize),
@@ -69,8 +70,6 @@ class _StylingSectionState extends State<StylingSection> {
                   ),
                 ),
               ),
-
-              
             ],
           ),
         ),
