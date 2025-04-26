@@ -14,7 +14,7 @@ It uses Flutter’s **CustomPainter** to render the annotations, supporting conf
 ## 🌐 Playground
 
 See the landing page which has the complete showcase:
-👉 [roughnotation-flutter.web.app](https://roughnotation-flutter.web.app)
+👉 [roughnotation.0xharkirat.com](https://roughnotation.0xharkirat.com)
 
 It showcases all use cases, animation types, groupings, styling controls, and more — all built with Flutter Web.
 

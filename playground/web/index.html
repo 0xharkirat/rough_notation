@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <!--
+  <head>
+    <!--
     If you are serving your web app in a path other than the root, change the
     href value below to reflect the base path you are serving from.
 
@@ -14,25 +14,143 @@
     This is a placeholder for base href that will be replaced by the value of
     the `--base-href` argument provided to `flutter build`.
   -->
-  <base href="$FLUTTER_BASE_HREF">
+    <base href="$FLUTTER_BASE_HREF" />
 
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A Flutter implementation of Rough Notation JS, the hand-drawn-style annotation library for widgets.">
+    <meta charset="UTF-8" />
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+    <meta
+      name="description"
+      content="A Flutter implementation of Rough Notation JS, the hand-drawn-style annotation library for widgets."
+    />
 
-  <!-- iOS meta tags & icons -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="RoughNotation Flutter">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+    <!-- iOS meta tags & icons -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="RoughNotation Flutter" />
+    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png" />
 
-  <title>RoughNotation Flutter</title>
-  <link rel="manifest" href="manifest.json">
-</head>
-<body>
-  <script src="flutter_bootstrap.js" async></script>
-</body>
+    <title>RoughNotation Flutter</title>
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- Splash Screen notations -->
+    <script src="https://unpkg.com/rough-notation/lib/rough-notation.iife.js"></script>
+
+    <!-- Google Fonts - Manrope -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Splash Screen CSS -->
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Helvetica, Arial, sans-serif;
+      }
+
+      #splash {
+        background: white;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        transition: opacity 0.8s ease;
+      }
+
+      #splash.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #splash {
+        text-align: center;
+        line-height: 1.5;
+      }
+      #splash span,
+      small {
+        margin: 8px 0;
+        display: inline-block;
+        font-size: 2.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="splash">
+      <span id="rough">Rough Notation</span>
+      <span id="flutter">Flutter</span>
+      <small style="font-size: medium; font-weight: bold" id="harkirat"
+        >Presented by Harkirat</small
+      >
+    </div>
+    <script src="flutter_bootstrap.js" async></script>
+
+    <script>
+      let flutterReady = false;
+      let animationReady = false;
+
+      function tryHideSplash() {
+        if (flutterReady && animationReady) {
+          const splash = document.getElementById("splash");
+          splash.classList.add("hidden");
+        }
+      }
+
+      window.addEventListener("flutter-first-frame", function () {
+        flutterReady = true;
+        tryHideSplash();
+      });
+
+      window.addEventListener("load", () => {
+        const roughText = document.getElementById("rough");
+        const flutterText = document.getElementById("flutter");
+        const harkiratText = document.getElementById("harkirat");
+
+        const highlight = RoughNotation.annotate(roughText, {
+          type: "highlight",
+          color: "#ffeb3b",
+          animationDuration: 800,
+        });
+
+        const box = RoughNotation.annotate(flutterText, {
+          type: "box",
+          color: "#2196F3",
+
+          strokeWidth: 3,
+          iterations: 2,
+          animationDuration: 800,
+        });
+
+        const underline = RoughNotation.annotate(harkiratText, {
+          type: "underline",
+          color: "#4CAF50",
+          strokeWidth: 3,
+          animationDuration: 800,
+        });
+
+        const group = RoughNotation.annotationGroup([
+          highlight,
+          underline,
+          box,
+        ]);
+
+        group.show();
+
+        // After animations
+        setTimeout(() => {
+          animationReady = true;
+          tryHideSplash();
+        }, 2600); // slight buffDuration slightly bigger than animation
+      });
+    </script>
+  </body>
 </html>
